@@ -1,0 +1,23 @@
+#FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:bullseye
+FROM balenalib/%%BALENA_MACHINE_NAME%%-ubuntu:focal-run
+
+RUN install_packages software-properties-common
+
+RUN add-apt-repository ppa:ievgeny/cctv-viewer
+
+RUN install_packages \
+    x11-apps \
+    mesa-utils \
+    mesa-utils-extra \
+    cctv-viewer \
+    git \
+    x11vnc \
+    cron
+
+COPY entry.sh /
+
+ENTRYPOINT  ["bash", "entry.sh"]
+
+ENV DISPLAY=:0
+
+EXPOSE 5900

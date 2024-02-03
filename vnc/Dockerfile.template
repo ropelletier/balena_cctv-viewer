@@ -1,0 +1,18 @@
+FROM balenalib/%%BALENA_MACHINE_NAME%%-python
+
+# Update software packages
+RUN install_packages \
+    iptables \
+    procps \
+    git
+
+# Pull down noVNC
+RUN curl -LO https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz
+RUN tar xfzv v1.2.0.tar.gz
+RUN mv noVNC-1.2.0 noVNC
+
+# Copy over script
+COPY ./start.sh ./
+
+# Start app
+CMD ["bash", "start.sh"]
