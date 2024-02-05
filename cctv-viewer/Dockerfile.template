@@ -11,21 +11,12 @@ RUN install_packages \
     mesa-utils-extra \
     cctv-viewer \
     git \
-    x11vnc \
-    cron \
-    supervisor \
-    xvfb \
-    wmctrl
+    x11vnc
 
 COPY entry.sh /
 
-ADD supervisor /etc/supervisor
-
 ENTRYPOINT  ["bash", "entry.sh"]
-
-EXPOSE 5900
 
 ENV DISPLAY=:0
 
-
-#https://github.com/jessfraz/dockerfiles/issues/359
+EXPOSE 5900
