@@ -12,12 +12,20 @@ RUN install_packages \
     cctv-viewer \
     git \
     x11vnc \
-    cron
+    cron \
+    supervisor \
+    xvfb \
+    wmctrl
 
 COPY entry.sh /
 
+ADD supervisor /etc/supervisor
+
 ENTRYPOINT  ["bash", "entry.sh"]
+
+EXPOSE 5900
 
 ENV DISPLAY=:0
 
-EXPOSE 5900
+
+#https://github.com/jessfraz/dockerfiles/issues/359
