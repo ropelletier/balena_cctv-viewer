@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-rm -Rf balena-xserver
-
-git clone https://$GKEY@github.com/ropelletier/balena-xserver.git
-
-bash /opt/xserver/balena-xserver/update.sh
-
-chmod +x /opt/xserver/balena-xserver/src/run.sh
-
 # kill previous x11 sockets that have persisted
 rm -r /tmp/.X11-unix 2>/dev/null
 
@@ -38,4 +30,23 @@ then
 	fi
 fi
 
-bash /opt/xserver/balena-xserver/src/run.sh
+#$VNC_PORT
+
+sleep 30 && x11vnc \
+  -display :0 \
+  -no6 \
+  -rfbport 5900 \
+  -nopw \
+  -shared \
+  -alwaysshared \
+  -bg \
+  -forever \
+  -quiet &
+
+if [ "$CURSOR" = true ];
+then
+    exec startx -- $FORCE_DISPLAY
+else
+    exec startx -- $FORCE_DISPLAY -nocursor
+fi
+

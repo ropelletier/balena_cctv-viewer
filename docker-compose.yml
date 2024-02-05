@@ -10,9 +10,11 @@ volumes:
   xserver:
 services:
   xserver:
-    image: bh.cr/balenalabs/xserver-aarch64
+    build: ./xserver
     restart: always
     privileged: true
+    ports:
+      - "5900:5900"
     volumes:
       - "xserver:/tmp/.X11-unix"
     networks:
@@ -27,25 +29,7 @@ services:
       - video
     volumes:
       - 'xserver:/tmp/.X11-unix'
-    ports:
-      - "5900:5900"
     networks:
       static:
         ipv4_address: 172.20.0.3
-  vnc:    
-    build: ./vnc
-    restart: always
-    network_mode: host
-    privileged: true
-    volumes:
-      - 'xserver:/tmp/.X11-unix'
-    ports:
-      - "80"
-    environment:
-      WEB_PORT: 80
-      DISABLE_PASSWORDS: true
-    labels:
-      io.balena.features.supervisor-api: 1
-    networks:
-      static:
-        ipv4_address: 172.20.0.4
+  

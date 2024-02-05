@@ -1,11 +1,6 @@
 ARG BALENA_ARCH=%%BALENA_ARCH%%
 
-#FROM balenalib/$BALENA_ARCH-debian:bullseye
-FROM balenalib/%%BALENA_MACHINE_NAME%%-ubuntu:focal-run
-
-RUN install_packages software-properties-common
-
-RUN add-apt-repository ppa:ievgeny/cctv-viewer
+FROM balenalib/$BALENA_ARCH-debian:bullseye
 
 RUN install_packages \
     matchbox-window-manager \
@@ -19,35 +14,18 @@ RUN install_packages \
     xserver-xorg-input-evdev \
     xserver-xorg-legacy \
     xserver-xorg-video-all \
-    cctv-viewer \
-    git
-
-#drivers to install
-RUN install_packages \
-    libgles2-mesa \
-    mesa-vdpau-drivers \
-    xserver-xorg-video-fbdev \
-    libgl1-mesa-dri \
-    libglx-mesa0 \
-    mesa-vulkan-drivers \
-    alsa-utils \
-    libasound2-dev \
-    xterm 
+    x11vnc
 
 WORKDIR /opt/xserver
 
 COPY src/xinitrc /root/.xinitrc
 
 COPY src/entry.sh src/config.sh VERSION /opt/xserver/
-ENV UDEV=1
-
-
-
-RUN sed -i -e 's/\r$//' /opt/xserver/entry.sh
-RUN sed -i -e 's/\r$//' /opt/xserver/config.sh
 
 ENTRYPOINT  ["/bin/bash", "/opt/xserver/entry.sh"]
 
 ENV CURSOR=true \
     UDEV=on \
     FORCE_DISPLAY=:0
+
+EXPOSE 5900
